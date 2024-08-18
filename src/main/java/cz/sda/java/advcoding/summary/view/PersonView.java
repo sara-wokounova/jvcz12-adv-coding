@@ -44,27 +44,31 @@ public class PersonView implements ApplicationMenu {
         listPersons();
         Integer personIndex = textIO.newIntInputReader()
                 .withMinVal(0)
-                .withMaxVal(personService.getPersons().size() - 1)
+                .withMaxVal(personService.getAll().size() - 1)
                 .read("Enter the number of the person to update");
-        Person person = personService.getPersons().get(personIndex);
-        textIO.getTextTerminal().println("Updating person: " + person.name());
+        Person person = personService.getAt(personIndex);
+        textIO.getTextTerminal().println("Updating person: " + person.getName());
         textIO.getTextTerminal().print("Current details: ");
         writePersonToTerminal(personIndex, person);
         String name = textIO.newStringInputReader()
-                .withDefaultValue(person.name())
+                .withDefaultValue(person.getName())
                 .withInputTrimming(true)
                 .read("Enter name");
         String phoneNumber = textIO.newStringInputReader()
-                .withDefaultValue(person.phoneNumber())
+                .withDefaultValue(person.getPhoneNumber())
                 .withInputTrimming(true)
                 .read("Enter phone number");
         String emailAddress = textIO.newStringInputReader()
-                .withDefaultValue(person.email())
+                .withDefaultValue(person.getEmail())
                 .withPattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")
                 .withInputTrimming(true)
                 .read("Enter email address");
         // TODO add company
-        personService.updatePerson(personIndex, name, phoneNumber, emailAddress, null);
+        personService.update(personIndex, Person.builder()
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .email(emailAddress)
+                .build());
     }
 
     private void removePerson() {
@@ -73,10 +77,10 @@ public class PersonView implements ApplicationMenu {
         listPersons();
         Integer personIndex = textIO.newIntInputReader()
                 .withMinVal(0)
-                .withMaxVal(personService.getPersons().size() - 1)
+                .withMaxVal(personService.getAll().size() - 1)
                 .read("Enter the number of the person to remove");
         try {
-            personService.removePerson(personIndex);
+            personService.remove(personIndex);
         } catch (IllegalArgumentException e) {
             textIO.getTextTerminal().println("Entered person does not exist");
         }
@@ -86,7 +90,7 @@ public class PersonView implements ApplicationMenu {
     private void listPersons() {
         textIO.getTextTerminal().println();
         textIO.getTextTerminal().println("List of all persons in system");
-        List<Person> persons = personService.getPersons();
+        List<Person> persons = personService.getAll();
         for (int i = 0; i< persons.size(); i++) {
             this.writePersonToTerminal(i, persons.get(i));
         }
@@ -99,12 +103,12 @@ public class PersonView implements ApplicationMenu {
             return;
         }
         String companyName;
-        if (person.company() == null) {
+        if (person.getCompany() == null) {
             companyName = "Unknown company";
         } else {
-            companyName = person.company().name();
+            companyName = person.getCompany().name();
         }
-        textIO.getTextTerminal().printf("[%d] %s: %s, %s (%s)%n", seqNo, person.name(), person.phoneNumber(), person.email(), companyName);
+        textIO.getTextTerminal().printf("[%d] %s: %s, %s (%s)%n", seqNo, person.getName(), person.getPhoneNumber(), person.getPhoneNumber(), companyName);
     }
 
     private void addPerson() {
@@ -114,6 +118,10 @@ public class PersonView implements ApplicationMenu {
         String phoneNumber = textIO.newStringInputReader().read("Enter phone number");
         String emailAddress = textIO.newStringInputReader().read("Enter email address");
         // TODO add company
-        personService.createPerson(name, phoneNumber, emailAddress, null);
+        personService.createPerson(Person.builder()
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .email(emailAddress)
+                .build());
     }
 }

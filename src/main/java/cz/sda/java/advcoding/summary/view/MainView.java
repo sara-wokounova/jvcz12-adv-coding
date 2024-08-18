@@ -8,10 +8,12 @@ public class MainView implements ApplicationMenu {
 
     private final TextIO textIO;
     private final PersonView personView;
+    private final CompanyView companyView;
 
-    public MainView(TextIO textIO, PersonView personView) {
+    public MainView(TextIO textIO, PersonView personView, CompanyView companyView) {
         this.textIO = textIO;
         this.personView = personView;
+        this.companyView = companyView;
     }
 
     @Override
@@ -25,6 +27,7 @@ public class MainView implements ApplicationMenu {
                     .read("Choose an option");
             switch (selectedOption) {
                 case PERSON -> personView.showMenu();
+                case COMPANY -> companyView.showMenu();
                 case EXIT -> textIO.getTextTerminal().println("Exiting");
             }
         }
