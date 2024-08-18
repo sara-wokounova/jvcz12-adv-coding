@@ -17,7 +17,7 @@ public class MainView implements ApplicationMenu {
     @Override
     public void showMenu() {
         MainMenuOptions selectedOption = null;
-        textIO.getTextTerminal().println("%n----------------------%sMainMenu%----------------------%n");
+        textIO.getTextTerminal().println("\n----------------------\nMain Menu\n----------------------\n");
         while (selectedOption != MainMenuOptions.EXIT) {
             selectedOption = textIO.newEnumInputReader(MainMenuOptions.class)
                     .withAllValuesNumbered()
